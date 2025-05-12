@@ -9,7 +9,7 @@
                 "-g",
                 "${workspaceFolder}/*.cpp",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
+                "${fileDirname}/a.out"
             ],
             "options": {
                 "cwd": "${fileDirname}"
@@ -29,9 +29,11 @@
             "command": "valgrind",
             "args": [
               "--leak-check=full",
-              "${fileDirname}/${fileBasenameNoExtension}"
+              "--show-leak-kinds=all",
+              "--log-file=${workspaceFolder}/valgrind.log",
+              "${fileDirname}/a.out"
             ],
-            "dependsOn": ["build"], // Запустит сборку перед Valgrind
+            "dependsOn": ["C/C++: g++ build active file"], // Запустит сборку перед Valgrind
             "group": "test"
         }
     ],

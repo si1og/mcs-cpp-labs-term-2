@@ -1,0 +1,15 @@
+==50183== Memcheck, a memory error detector
+==50183== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==50183== Using Valgrind-3.24.0 and LibVEX; rerun with -h for copyright info
+==50183== Command: /home/si1og/labs/sem2/lab1/a.out
+==50183== Parent PID: 264
+==50183== 
+==50183== 
+==50183== HEAP SUMMARY:
+==50183==     in use at exit: 0 bytes in 0 blocks
+==50183==   total heap usage: 3 allocs, 3 frees, 74,768 bytes allocated
+==50183== 
+==50183== All heap blocks were freed -- no leaks are possible
+==50183== 
+==50183== For lists of detected and suppressed errors, rerun with: -s
+==50183== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
