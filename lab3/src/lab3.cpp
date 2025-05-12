@@ -21,10 +21,32 @@
 #include "my-string.hpp"
 #include "matrix.hpp"
 #include "short_array.hpp"
+#include "worker_db.hpp"
+#include "basefile.hpp"
 
 using namespace std;
 
 MyString addTxtExtension(const MyString &path) { return path + ".txt"; }
+
+void print_db(WorkerDb& db) {
+  for (auto it = db.begin(); it != db.end(); ++it) {
+    cout << it.key() << " -> ";
+    cout << "name: " << it->name << ", age: " << it->age << ", experience: " << it->experience << '\n';
+  }
+}
+
+double get_avg_age(WorkerDb& db) {
+  int total_age = 0;
+  int count = 0;
+
+  for (auto it = db.begin(); it != db.end(); ++it) {
+    total_age += it->age;
+    ++count;
+  }
+
+  if (count == 0) return 0;
+  return static_cast<double>(total_age) / count;
+}
 
 int main() {
 
@@ -191,7 +213,6 @@ int main() {
      */
 
 
-    //TODO: Доделать
     {
         // MyString s1("abc");
         // MyString s2 = s1 + "ccc";
@@ -351,12 +372,12 @@ int main() {
     //   ShortArray a;
     //   for (int i = 0; i < 5; ++i) a.push(i);
 
-    //   a.print_debug_info();
+    //   a.print_debug();
 
     //   ShortArray b;
     //   for (int i = 0; i < 100; ++i) b.push(i);
 
-    //   b.print_debug_info();
+    //   b.print_debug();
     // }
 
     /**
@@ -376,15 +397,15 @@ int main() {
      * был бы равен `sizeof(short *) + 2 * sizeof(size_t)`.
      */
 
-    {
-      // std::cout << "sizeof(ShortArray): " << sizeof(ShortArray) << "\n";
+    // {
+    //   ShortArray a(5);
+    //   for (int i = 0; i < 5; ++i) a[i] = i;
+    //   a.print_debug();
 
-      // ShortArray a(5);
-      // a.print_debug_info();  // [inline]
-
-      // ShortArray b(100);
-      // b.print_debug_info();  // [dynamic]
-    }
+    //   ShortArray b(100);
+    //   for (int i = 0; i < 100; ++i) b[i] = i;
+    //   b.print_debug();
+    // }
 
     /**
      * Задание 4. Ассоциативный массив. Итератор. Операторы инкремента.
@@ -406,13 +427,14 @@ int main() {
      * Используйте для хранения строковых данных ваш класс MyString.
      */
 
-    /* {
-        WorkerDb db;
-        db["Ivanov"] = WorkerData("Ivan", 34, ...);
-        db["Petrov"] = WorkerData("Petr", 43, ...);
-        std::cout << "Ivanov's name = " << db["Ivanov"].name << "\n";
-        std::cout << "Petrov's age = " << db["Petrov"].age << "\n";
-    } */
+     {
+        // WorkerDb db;
+        // db["Ivanov"] = WorkerData("Ivan", 34, 10);
+        // db["Petrov"] = WorkerData("Petr", 43, 15);
+
+        // cout << "Ivanov name: "; db["Ivanov"].name.print();
+        // cout << "Petrov age: " << db["Petrov"].age << "\n";
+    } 
 
     /**
      * Задание 4.2. Итератор.
@@ -456,15 +478,15 @@ int main() {
      * Проверьте ниже работу итератора.
      */
 
-    /* {
-        WorkerDb db;
-        db["Ivanov"] = WorkerData("Ivan", 34, ...);
-        db["Petrov"] = WorkerData("Petr", 43, ...);
-        for (auto it = db.begin(); it != db.end(); ++it)
-        {
-            std::cout << it.key() << " -> " << it->name << '\n';
-        }
-    } */
+    // {
+    //   WorkerDb db;
+    //   db["Ivanov"] = WorkerData("Ivan", 34, 10);
+    //   db["Petrov"] = WorkerData("Petr", 43, 15);
+
+    //   for (auto it = db.begin(); it != db.end(); ++it) {
+    //     cout << it.key() << " -> " << it->name << ", age = " << it->age << "\n";
+    //   }
+    // }
 
     /**
      * Задание 4.3. Работа "прикладного программиста".
@@ -476,11 +498,30 @@ int main() {
      * `WorkerDb`.
      */
 
+    // {
+    //   WorkerDb db;
+    //   db["Ivanov"] = WorkerData("Ivan", 30, 5);
+    //   db["Petrov"] = WorkerData("Petr", 50, 25);
+    //   db["Sidorov"] = WorkerData("Pavel", 40, 15);
+
+    //   print_db(db);
+    //   cout << "Average age: " << get_avg_age(db) << "\n";
+    // }
+
     /**
      * Задание 5. Неявно опеределенные операторы. Удаление операторов.
      *
      * Проверьте, определен ли оператор присваивания для класса `BaseFile` из
      * работы 2? Что он делает? Имеется ли смысл в таком операторе?
+      [
+      1) Не определён явно => компилятор автоматически генерирует его
+      2) Автоматически сгенерированный оператор присваивания 
+          копирует указатель FILE* file побайтно из одного объекта в другой
+      3) Нет, такой оператор бессмысленен: 
+        - FILE* — это уникальный ресурс, им должен владеть только один объект
+        - Копировать его — всё равно что сделать delete ptr дважды
+     ]
+  
      *
      * Явно удалите оператор присваивания и конструктор копирования ключевым
      * словом `delete`, но определите их move-аналоги в этом классе.
@@ -488,7 +529,11 @@ int main() {
      */
 
     {
+      // BaseFile f1("test.txt", "wb");
+      // BaseFile f2 = std::move(f1);
 
+      // BaseFile f3("test2.txt", "wb");
+      // f3 = std::move(f2);
     }
 
     /**

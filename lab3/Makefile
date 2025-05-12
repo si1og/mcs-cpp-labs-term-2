@@ -7,7 +7,8 @@ BUILD_DIR = build
 TEST_DIR = tests
 
 OBJECTS = $(BUILD_DIR)/my-string.o $(BUILD_DIR)/matrix.o \
-					$(BUILD_DIR)/short_array.o
+					$(BUILD_DIR)/short_array.o $(BUILD_DIR)/worker_db.o \
+					$(BUILD_DIR)/basefile.o
 
 # TESTS = \
 #   $(BUILD_DIR)/test_rect_basic_methods.out \

@@ -1,25 +1,25 @@
 #pragma once
 #include <cstddef>
-#include <stdexcept>
+#include <cstdint>
 #include <iostream>
+#include <stdexcept>
+#include <cstring>
 
 class ShortArray {
 private:
-  static const size_t INLINE_CAPACITY = (sizeof(short*) + sizeof(size_t)) / sizeof(short);
+  static constexpr uintptr_t FLAG_MASK = 1;
 
-  union Storage {
-    struct {
-      short* heap_ptr;
-      size_t capacity;
-    };
-    short inline_data[INLINE_CAPACITY];
+  uintptr_t ptr_with_flag;
+  size_t size;
+  size_t capacity;
 
-    Storage() : heap_ptr(nullptr), capacity(0) {}
-  } storage;
+  static constexpr size_t INLINE_CAPACITY =
+    (sizeof(ptr_with_flag) + sizeof(size_t) * 2) / sizeof(short);
+  alignas(short) short inline_data[INLINE_CAPACITY];
 
-  size_t length;
-  bool is_dynamic;
-
+  bool is_inline() const;
+  short* data_ptr() const;
+  void set_data_ptr(short* ptr, bool use_inline);
   void ensure_capacity(size_t min_capacity);
 
 public:
@@ -31,11 +31,11 @@ public:
 
   void push(short value);
   short pop();
-  size_t size() const;
   void resize(size_t new_size, short fill_value = 0);
+  size_t size_() const;
 
   short& operator[](size_t index);
   short operator[](size_t index) const;
 
-  void print_debug_info() const;
+  void print_debug() const;
 };

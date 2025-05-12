@@ -5,13 +5,13 @@
 using namespace std;
 
 MyString::MyString() : data(nullptr), length(0) {
-  cout << "[MyString ctor default]\n";
+  // cout << "[MyString ctor default]\n";
   data = new char[1];
   data[0] = '\0';
 }
 
 MyString::MyString(const char* str) {
-  cout << "[MyString ctor(const char*)]\n";
+  // cout << "[MyString ctor(const char*)]\n";
   if (str) {
     length = strlen(str);
     data = new char[length + 1];
@@ -24,14 +24,14 @@ MyString::MyString(const char* str) {
 }
 
 MyString::MyString(const MyString& other) {
-  cout << "[MyString copy ctor]\n";
+  // cout << "[MyString copy ctor]\n";
   length = other.length;
   data = new char[length + 1];
   strcpy(data, other.data);
 }
 
 MyString::~MyString() {
-  cout << "[MyString dtor]\n";
+  // cout << "[MyString dtor]\n";
   delete[] data;
 }
 
