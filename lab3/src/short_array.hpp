@@ -1,41 +1,48 @@
 #pragma once
 #include <cstddef>
-#include <cstdint>
 #include <iostream>
-#include <stdexcept>
 #include <cstring>
+#include <cassert>
+#include <cstdint>
 
 class ShortArray {
 private:
-  static constexpr uintptr_t FLAG_MASK = 1;
+  static const size_t INLINE_CAP = 12;
+  union Storage {
+    struct {
+      short* ptr;
+      size_t size;
+      size_t cap;
+    } dyn;
+    short inl[INLINE_CAP];
+    // Инициализирует всё 0
+    Storage() { std::memset(this, 0, sizeof(Storage)); }
+  } storage;
 
-  uintptr_t ptr_with_flag;
-  size_t size;
-  size_t capacity;
+  // Флаг хранится в старшем бите cap
+  static constexpr size_t FLAG = size_t(1) << (sizeof(size_t) * 8 - 1);
 
-  static constexpr size_t INLINE_CAPACITY =
-    (sizeof(ptr_with_flag) + sizeof(size_t) * 2) / sizeof(short);
-  alignas(short) short inline_data[INLINE_CAPACITY];
-
-  bool is_inline() const;
-  short* data_ptr() const;
-  void set_data_ptr(short* ptr, bool use_inline);
-  void ensure_capacity(size_t min_capacity);
+  bool is_dynamic() const { return storage.dyn.cap & FLAG; }
+  void set_dynamic(bool val) {
+    if (val) storage.dyn.cap |= FLAG;
+    else storage.dyn.cap &= ~FLAG;
+  }
+  size_t pure_cap() const { return storage.dyn.cap & ~FLAG; }
 
 public:
   ShortArray();
-  ShortArray(size_t size, short fill_value = 0);
+  ShortArray(size_t n, short fill_value = 0);
   ShortArray(const ShortArray& other);
   ShortArray& operator=(const ShortArray& other);
+  ShortArray(ShortArray&& other) noexcept;
+  ShortArray& operator=(ShortArray&& other) noexcept;
   ~ShortArray();
 
-  void push(short value);
-  short pop();
+  size_t size() const;
   void resize(size_t new_size, short fill_value = 0);
-  size_t size_() const;
-
-  short& operator[](size_t index);
-  short operator[](size_t index) const;
-
-  void print_debug() const;
+  void push(short val);
+  short pop();
+  short& operator[](size_t idx);
+  const short& operator[](size_t idx) const;
+  void print() const;
 };

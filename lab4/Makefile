@@ -6,9 +6,8 @@ SRC_DIR = src
 BUILD_DIR = build
 TEST_DIR = tests
 
-OBJECTS = $(BUILD_DIR)/my-string.o $(BUILD_DIR)/matrix.o \
-					$(BUILD_DIR)/short_array.o $(BUILD_DIR)/worker_db.o \
-					$(BUILD_DIR)/basefile.o $(BUILD_DIR)/bool_array.o
+OBJECTS = $(BUILD_DIR)/point.o $(BUILD_DIR)/circle.o \
+					$(BUILD_DIR)/node.o $(BUILD_DIR)/list.o
 
 # TESTS = \
 #   $(BUILD_DIR)/test_rect_basic_methods.out \
@@ -31,15 +30,15 @@ leaks: $(BUILD_DIR)/leaks.out
 	valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all $(BUILD_DIR)/leaks.out
 
 # Основная отладочная сборка
-$(BUILD_DIR)/debug.out: $(OBJECTS) $(SRC_DIR)/lab3.cpp | $(BUILD_DIR)
-	$(CC) $(CFLAGS) -o $@ $(SRC_DIR)/lab3.cpp $(OBJECTS) $(LDFLAGS)
+$(BUILD_DIR)/debug.out: $(OBJECTS) $(SRC_DIR)/lab4.cpp | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -o $@ $(SRC_DIR)/lab4.cpp $(OBJECTS) $(LDFLAGS)
 
 $(BUILD_DIR)/rect-functions.o: $(SRC_DIR)/rect-functions.cpp $(SRC_DIR)/rect-functions.h | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 # Сборка для проверки утечек
-$(BUILD_DIR)/leaks.out: $(OBJECTS) $(SRC_DIR)/lab3.cpp | $(BUILD_DIR)
-	$(CC) $(CFLAGS) -o $@ $(SRC_DIR)/lab3.cpp $(OBJECTS) $(LDFLAGS)
+$(BUILD_DIR)/leaks.out: $(OBJECTS) $(SRC_DIR)/lab4.cpp | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -o $@ $(SRC_DIR)/lab4.cpp $(OBJECTS) $(LDFLAGS)
 
 # Сборка тестов
 # test: $(TESTS)

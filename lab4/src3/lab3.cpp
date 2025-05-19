@@ -401,17 +401,15 @@ int main() {
      * был бы равен `sizeof(short *) + 2 * sizeof(size_t)`.
      */
 
-    {
-      std::cout << sizeof(ShortArray) << "\n";
+    // {
+    //   ShortArray a(5);
+    //   for (int i = 0; i < 5; ++i) a[i] = i;
+    //   a.print();
 
-      ShortArray a(5);
-      for (int i = 0; i < 5; ++i) a[i] = i+1;
-      a.print();
-
-      ShortArray b(100);
-      for (int i = 0; i < 100; ++i) b[i] = i+1;
-      b.print();
-    }
+    //   ShortArray b(100);
+    //   for (int i = 0; i < 100; ++i) b[i] = i;
+    //   b.print();
+    // }
 
     /**
      * Задание 4. Ассоциативный массив. Итератор. Операторы инкремента.
